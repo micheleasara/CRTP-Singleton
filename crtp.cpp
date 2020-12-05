@@ -1,6 +1,6 @@
 #include <iostream>
 
-template <class T>
+template <typename T>
 class Singleton {
 public:
   static T& getInstance() {
@@ -13,8 +13,12 @@ public:
   Singleton& operator=(Singleton&&) = delete;
 
 protected:
-  Singleton(){}
+  Singleton() = default;
   static T INSTANCE;
+
+private:
+  // stop aggregate initialization of derived types in C++17
+  Singleton(int) {};
 };
 template<typename T>
 T Singleton<T>::INSTANCE{};
@@ -28,6 +32,7 @@ public:
 
 int main() {
   auto& a = A::getInstance();
+  // A b{}; // should not be allowed to compile
   std::cout << a.test() << "\n";
   return 0;
 }
