@@ -17,10 +17,6 @@ public:
 protected:
   Singleton() = default;
   static T INSTANCE;
-
-private:
-  // stop aggregate initialization of derived types in C++17
-  Singleton(int) {};
 };
 template<typename T>
 T Singleton<T>::INSTANCE{};
