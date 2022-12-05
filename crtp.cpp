@@ -1,5 +1,7 @@
 #include <iostream>
 
+#define SINGLETON(x) private: x() = default; friend Singleton<x>;
+
 template <typename T>
 class Singleton {
 public:
@@ -24,8 +26,9 @@ template<typename T>
 T Singleton<T>::INSTANCE{};
 
 class A: public Singleton<A> {
+SINGLETON(A)
 public:
-   decltype(auto) test() {
+   auto test() {
      return "hello";
    }
 };
@@ -33,6 +36,8 @@ public:
 int main() {
   auto& a = A::getInstance();
   // A b{}; // should not be allowed to compile
+  // A b; // should not be allowed to compile
+
   std::cout << a.test() << "\n";
   return 0;
 }
