@@ -6,7 +6,7 @@ template <typename T>
 class Singleton {
 public:
   static T& getInstance() {
-    return INSTANCE;
+    return instance;
   }
 
   Singleton(Singleton const&) = delete;
@@ -16,10 +16,10 @@ public:
 
 protected:
   Singleton() = default;
-  static T INSTANCE;
+  static T instance;
 };
 template<typename T>
-T Singleton<T>::INSTANCE{};
+T Singleton<T>::instance{};
 
 class A: public Singleton<A> {
 SINGLETON(A)
