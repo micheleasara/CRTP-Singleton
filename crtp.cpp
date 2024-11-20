@@ -1,12 +1,18 @@
-#include <iostream>
+#include <print>
 
-#define SINGLETON(x) private: x() = default; friend Singleton<x>;
+#define SINGLETON(x) \
+private:             \
+    x() = default;   \
+    ~x() = default;  \
+    friend Singleton<x>;
 
 template <typename T>
 class Singleton {
 public:
   static T& getInstance() {
-    return instance;
+    // intentional leak as per Construct On First Use Idiom
+    static auto instance = new T();
+    return *instance;
   }
 
   Singleton(Singleton const&) = delete;
@@ -16,10 +22,9 @@ public:
 
 protected:
   Singleton() = default;
-  static T instance;
+  // may not need to be virtual if it's never destroyed
+  ~Singleton() = default;
 };
-template<typename T>
-T Singleton<T>::instance{};
 
 class A: public Singleton<A> {
 SINGLETON(A)
@@ -31,9 +36,12 @@ public:
 
 int main() {
   auto& a = A::getInstance();
-  // A b{}; // should not be allowed to compile
-  // A b; // should not be allowed to compile
+  // should not be allowed to compile
+  // A b{};
+  // A c;
+  // delete &a;
+  // Singleton<A> *d = &a; delete d;
 
-  std::cout << a.test() << "\n";
+  std::println("{}", a.test());
   return 0;
 }
